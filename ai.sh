@@ -3,6 +3,7 @@
 # Mode can be one of:
 #   - user_entrypoint
 #   - debug_prompt
+#   - debug_completions
 #   - selector_preview
 mode="user_entrypoint"
 user_input=""
@@ -32,6 +33,13 @@ parse_cli() {
   if [[ "$1" == "__debug_prompt__" ]]; then
     shift 1
     mode="debug_prompt"
+    user_input="$1"
+    return
+  fi
+
+  if [[ "$1" == "__debug_completions__" ]]; then
+    shift 1
+    mode="debug_completions"
     user_input="$1"
     return
   fi
@@ -69,15 +77,41 @@ openai_prompt_template=$(cat <<'EOF'
 
 # DESCRIPTION: %DESCRIPTION%
 # CODE:
-
+.
 EOF
 )
 
-get_completions() {
-  prompt="$(echo "$openai_prompt_template" | sd '%DESCRIPTION%' "$user_input")"
-  echo "PROMPT we're sending to OpenAI:"
+user_prompt() {
+  echo "$openai_prompt_template" | sd '%DESCRIPTION%' "$user_input"
+}
+
+debug_prompt() {
+  prompt="$(user_prompt)"
+  prompt=${prompt%.}
   echo
+  echo 'Template:'
+  echo "$openai_prompt_template"
+  echo
+  echo "----"
+  echo
+  echo "Prompt:"
   echo "$prompt"
+  echo "----"
+  echo
+  echo "This is what the prompt looks like when I immediately append some text:"
+  echo
+  echo "$prompt"'hello world'
+  echo
+}
+
+get_completions() {
+  prompt="$(user_prompt)"
+  prompt=${prompt%.}
+
+  dotenv openai api completions.create \
+    --engine 'code-davinci-002'        \
+    --prompt "$prompt"                 \
+    --temperature 0
 }
 
 select_completion() {
@@ -93,6 +127,7 @@ run_preview_selection() {
 }
 
 parse_cli "$@"
+echo "$mode"
 
 case "$mode" in
   user_entrypoint)
@@ -100,6 +135,10 @@ case "$mode" in
     exit 0
     ;;
   debug_prompt)
+    debug_prompt
+    exit 0
+    ;;
+  debug_completions)
     get_completions
     exit 0
     ;;
