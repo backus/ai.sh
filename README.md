@@ -27,6 +27,7 @@ This tool is written in pure bash, but it depends on a few programs being availa
 * [bat](https://github.com/sharkdp/bat) for syntax highlighted code previews
 * [skim](https://github.com/lotabout/skim) for the interactive UI for choosing if you want to run the code, copy it, or discard
 * [openai-python](https://github.com/openai/openai-python) for the openai CLI
+* [sd](https://github.com/chmln/sd) for string manipulation
 
 ### Config
 

@@ -20,6 +20,7 @@ ensure_dependencies_installed() {
   ensure_dependency bat "brew install bat"
   ensure_dependency openai "pip install openai"
   ensure_dependency sk "brew install sk"
+  ensure_dependency sd "brew install sd"
 }
 
 load_api_key() {
