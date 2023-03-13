@@ -3,6 +3,24 @@
 progname="$(basename "$0")"
 user_input=""
 
+is_installed() {
+  which -s "$1" > /dev/null
+}
+
+ensure_dependency() {
+  if ! is_installed "$1"; then
+    echo "Error: this program depends on '$1'"
+    echo "Install it with: $2"
+    exit 1
+  fi
+}
+
+ensure_dependencies_installed() {
+  ensure_dependency bat "brew install bat"
+  ensure_dependency openai "pip install openai-cli"
+  ensure_dependency sk "brew install sk"
+}
+
 print_usage() {
   echo "Usage: $progname 'natural language description of command you want "
 }
@@ -122,5 +140,6 @@ run() {
   esac
 }
 
+ensure_dependencies_installed
 parse_cli "$@"
 run
