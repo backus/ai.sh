@@ -2,6 +2,7 @@
 
 progname="$(basename "$0")"
 user_input=""
+config_file="$HOME/.config/ai.sh/config"
 
 is_installed() {
   which -s "$1" > /dev/null
@@ -19,6 +20,23 @@ ensure_dependencies_installed() {
   ensure_dependency bat "brew install bat"
   ensure_dependency openai "pip install openai-cli"
   ensure_dependency sk "brew install sk"
+}
+
+load_api_key() {
+  if [[ ! -f "$config_file" ]]; then
+    echo "Error: config file does not exist: $config_file"
+    echo
+    echo "Create it with:"
+    echo "  mkdir -p $(dirname "$config_file")"
+    echo "  touch $config_file"
+    echo
+    echo "Then add your OpenAI API key to it:"
+    echo "  echo 'OPENAI_API_KEY=your-key-here' > $config_file"
+    exit 1
+  fi
+
+  api_key="$(sd '^OPENAI_API_KEY=' '' < "$config_file")"
+  export OPENAI_API_KEY="$api_key"
 }
 
 print_usage() {
@@ -75,7 +93,7 @@ get_completions() {
   prompt=${prompt%.}
 
   completion="$(
-    dotenv openai api completions.create \
+    openai api completions.create \
       --engine 'code-davinci-002'        \
       --prompt "$prompt"                 \
       --temperature 0                    \
@@ -141,5 +159,6 @@ run() {
 }
 
 ensure_dependencies_installed
+load_api_key
 parse_cli "$@"
 run
