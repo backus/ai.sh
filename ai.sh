@@ -18,7 +18,7 @@ ensure_dependency() {
 
 ensure_dependencies_installed() {
   ensure_dependency bat "brew install bat"
-  ensure_dependency openai "pip install openai-cli"
+  ensure_dependency openai "pip install openai"
   ensure_dependency sk "brew install sk"
 }
 
