@@ -89,6 +89,21 @@ done<STOP>
 EOF
 )
 
+# Inject into the zsh history so that it feels like we ran the command without the AI wrapper
+inject_into_zsh_history() {
+  local command
+  command="$1"
+
+  # make a prefix like : 1678919131:0;
+  prefix=": $(date +%s):0;"
+  # escape each newline with a backslash
+  command="$(echo "$command" | sd "\n" '\\\n')"
+  # delete the final backslash
+  command="${command%?}"
+
+  echo "$prefix$command" >> "$HISTFILE"
+}
+
 user_prompt() {
   echo "$openai_prompt_template" | sd '%DESCRIPTION%' "$user_input"
 }
@@ -146,6 +161,7 @@ run() {
     Run\ Code)
       # Print the code so the user knows what ran
       cat "$completion_temp_file"
+      inject_into_zsh_history "$(cat "$completion_temp_file")"
       printf "\n\n"
       zsh "$completion_temp_file"
       ;;
