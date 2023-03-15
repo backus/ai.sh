@@ -53,8 +53,12 @@ parse_cli() {
   user_input="$1"
 }
 
-openai_prompt_template=$(cat <<'EOF'
+# We include OSTYPE so that the model knows to recommend commands that work for that environment.
+# @see https://github.com/backus/ai.sh/pull/4
+openai_prompt_template=$(cat <<EOF
 # zsh
+#
+# OSTYPE=$OSTYPE
 #
 # All code that deletes, kills, or does an unrevertable update should be
 # prefixed with a comment saying "# destructive"
