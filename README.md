@@ -37,6 +37,10 @@ This tool uses the OpenAI CLI and therefore needs an active API key. It looks fo
 
 I hope it is obvious that you should exercise caution in running a bash script that uses AI to generate and run commands in your terminal. I've tried to make it sane, but use your best judgement and make sure you understand what you run.
 
+## Linux
+
+I don't have any plans to make this work outside of macOS since I only use macs for development. That said, @agarrubio shared some tips in [#3](https://github.com/backus/ai.sh/issues/3) on how to modify this script to work on Ubuntu so check out that issue if you want to modify for your own use.
+
 ### Credits
 
 * Thanks to Jay Hack for the original inspiration with his [llm.sh](https://github.com/jayhack/llm.sh)
