@@ -113,11 +113,11 @@ get_completions() {
   prompt=${prompt%.}
 
   completion="$(
-    openai api completions.create \
-      --engine 'code-davinci-002'        \
-      --prompt "$prompt"                 \
-      --temperature 0                    \
-      --stop '<STOP>'                    \
+    openai api chat_completions.create \
+      --model 'gpt-3.5-turbo'         \
+      --message user "$prompt"        \
+      --temperature 0                 \
+      --stop '<STOP>'                 \
       --max-tokens 50
   )"
 
