@@ -91,6 +91,9 @@ EOF
 
 # Inject into the zsh history so that it feels like we ran the command without the AI wrapper
 inject_into_zsh_history() {
+  if [[ -z "$HISTFILE" ]]; then
+    return
+  fi
   local command
   command="$1"
 
